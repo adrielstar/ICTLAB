@@ -28,15 +28,18 @@ foreach ($aangrenzendeBuurten as $aangrenzebuurt) {
     if ($aangrenspoly) {
         array_push($filteredPolygon, $aangrenspoly);
     }
+
 }
 
-$filternamArray = array();
+$aangrensBuurtNaam = [];
 foreach ($aangrenzendeBuurten as $aangrenzendeBuurt) {
     $aangrenz = $SolrBuurtCall->getName($aangrenzendeBuurt);
-    if ($aangrenz) {
-        array_push($filternamArray, $aangrenz);
+    if($aangrenzendeBuurt)
+    {
+        array_push($aangrensBuurtNaam, $aangrenz);
     }
-   echo($aangrenz);
+    print_r($aangrenz);
+
 }
 
 $markerPoints = $this->collection;
@@ -57,7 +60,7 @@ foreach ($markerPoints as $value) {
                 var lat = <?php echo json_encode($this->lat); ?>;
                 var lng = <?php echo json_encode($this->lng); ?>;
                 var polygon =<?php echo json_encode($polygonBuurt); ?>;
-                var aagrenzendeNaam = <?php echo json_encode($filternamArray); ?>;
+                var aagrenzendeNaam = <?php echo json_encode($aangrensBuurtNaam); ?>;
                 var aangrezendePolygon = <?php echo json_encode($filteredPolygon); ?>;
             </script>
 
@@ -172,6 +175,7 @@ foreach ($markerPoints as $value) {
             // language for representing vector geometry objects on a map.
             var polygons = polygon;
             var aangrenzendePolygon = aangrezendePolygon;
+            var aangrenzendePolyName = aagrenzendeNaam;
 
             //using Regular expression, this will get the indivudal Polygon Rings
             var regExpression = /\(([^()]+)\)/g;
@@ -202,7 +206,9 @@ foreach ($markerPoints as $value) {
             //Draw the polygon aangrens for each of inner rings
             for (i = 0; i < Ringss.length; i++) {
                 pointsData = Ringss[i].split(",");
+
                 aangrenzendePolygonPoints = [];
+
 
                 for (j = 0; j < pointsData.length; j++) {
                     coordinates = pointsData[j].split(" ");
@@ -285,7 +291,7 @@ foreach ($markerPoints as $value) {
                     var contentString = "<b>" + aagrenzendeNaam + "</b><br />";
 
                 console.log(aagrenzendeNaam);
-                contentString += "<br /><a href='#'>Zoom to</a><br />"; // later Zoomto need to be function that will change the search function to the current location.
+                contentString += "<br /><a href='http://ictlab.local/result?stad=Appingedam&buurt=Appingedam-Oost'>Zoom to</a><br />"; // later Zoomto need to be function that will change the search function to the current location.
                 // Replace our Info Window's content and position
                 infowindow.setContent(contentString);
                 infowindow.setPosition(event.latLng);
